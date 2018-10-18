@@ -63,6 +63,8 @@ application 이름은 복수형으로 적어주는 것이 좋다. (members, post
 
 app.py 에 verbrose_name을 작성하면 admin 페이지의 그룹 이름을 바꿀 수 있다. 하지만 변경해도 바뀌지 않는 이유는, 장고가 settings에 있는 Installed_Apps 내부에 어플리케이션을 참조할때 <AppName>Config 클래스를 참조하지 않기 때문이다.
     그렇기 때문에 settings에 InstallApp 내부에 정확히 Config 클래스를 정확히 가리키게 해야한다. `<AppFolderName>.apps.<AppName>Config` 를 리스트 내부에 적어주어야한다.
+    
+upload_to 를 통해 이미지를 저장했지만, Django 에서 유저가 업로드한 파일을 잘 읽지 못한다. User Uploaded Source File 이라고 한다. 이 파일은 소스코드 내부에 포함되면 안된다.
 
 ## 오류
 
