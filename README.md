@@ -66,7 +66,7 @@ app.py 에 verbrose_name을 작성하면 admin 페이지의 그룹 이름을 바
     
 settings 안에 `MEDIA_ROOT` 가 존재한다면 그 폴더 하위에 upload_to 설정값에 저장되게 된다.
 upload_to 를 통해 이미지를 저장했지만, Django 에서 유저가 업로드한 파일을 잘 읽지 못한다. `User Uploaded Source File` 이라고 한다. 이 파일은 소스코드 내부(git)에 포함되면 안된다. 이 파일을 읽기 위해서는 `MEDIA_URL` 을 사용하여야 한다.
-`config.urls`를 참고하려고 하기때문에 아직까지 이미지를 불러오지 못한다. 그러므로 `config.urls`에 url을 지정하고, view를 작성한다.
+`config.urls`를 참고하려고 하기때문에 아직까지 이미지를 불러오지 못한다. 그러므로 `config.urls`에 url을 지정하고, view를 작성한다. 이 과정은 static(prefix, document_root) 함수로 한번에 처리할 수 있다.
 > settgins.MEDIA_URL 로 시작하는 요청은 settings.MEDIA_ROOT에서 파일을 검색하고 있으면 해당 파일을 Response
 > /static/ (settings.STATIC_URL) 으로 시작하는 요청은 STATICSFILES_DIRS 리스트 파일목록을 검색, 있으면 해당 파일을 response
 
