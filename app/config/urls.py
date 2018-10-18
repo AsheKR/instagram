@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from . import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path 타입은 / 를 포함한 문자열을 찾는다.
+    path('media/<path:path>/', views.media_serve)
 ]
