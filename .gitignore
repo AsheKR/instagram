@@ -1,4 +1,5 @@
-/Crawler/save_data
+# Media (Store User-upload files)
+/.media
 
 # Created by https://www.gitignore.io/api/git,linux,macos,python,django,virtualenv,pycharm+all,jupyternotebook
 
