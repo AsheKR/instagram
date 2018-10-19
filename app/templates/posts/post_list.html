@@ -1,0 +1,4 @@
+{% for post in posts %}
+    {{ post.photo }}
+    <img src="{{ post.photo.url }}" alt="">
+{% endfor%}

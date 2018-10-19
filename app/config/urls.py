@@ -16,18 +16,19 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
-from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('posts/', include('posts.urls'))
     # path 타입은 / 를 포함한 문자열을 찾는다.
     #path('media/<path:path>/', views.media_serve)
 ]
 
 # MEDIA_URL로 시작하는 URL은 static() 내의 serve() 함수를 통해 처리
 # MEDIA_ROOT 기준으로 파일을 검색함
+# static() 함수는 리스트를 반환하므로 + 연산으로 append 가능
 urlpatterns += static(
     prefix=settings.MEDIA_URL,
     document_root=settings.MEDIA_ROOT,
