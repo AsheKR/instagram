@@ -1,4 +1,8 @@
-{% for post in posts %}
-    {{ post.photo }}
-    <img src="{{ post.photo.url }}" alt="">
-{% endfor%}
+{% extends 'posts/base.html' %}
+
+{% block content %}
+    {% for post in posts %}
+        {{ post.photo }}
+        <img src="{{ post.photo.url }}" alt="">
+    {% endfor%}
+{% endblock %}
