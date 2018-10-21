@@ -1,0 +1,29 @@
+{% extends 'posts/base.html' %}
+
+{% block content %}
+<div class="container">
+        <div class="row justify-content-center mb-4">
+            <div class="col col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        새 게시글
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <form action="{% url 'posts:post_create' %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <div class="custom-file mb-2">
+                                        <input type="file" name="photo" id="photo" class="custom-file-input">
+                                        <label for="photo" class="custom-file-label">이미지 파일</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary form-control">전송</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}
