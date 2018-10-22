@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 
 from members.models import User
 from .models import Post
+from .forms import PostCreateForm
 
 
 def post_list(request):
@@ -29,10 +30,14 @@ def post_create(request):
     if request.method == 'POST':
         author = User.objects.get(pk=1)
         photo = request.FILES['photo']
-        fs = FileSystemStorage()
-        fs.save('post/'+photo.name, photo)
 
         Post.objects.create(author=author, photo=photo)
-        return redirect('posts:post-list')
+        return redirect('posts:post_list')
     else:
-        return render(request, 'posts/post_create.html')
+        # GET 요청의 경우, 빈 Form인스턴ㅅ트를 context에 담아 전달
+        # Tempatle에는 `form` 키로 해당 Form 인스턴스 속성을 사용 가능
+        form = PostCreateForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'posts/post_create.html', context)

@@ -14,8 +14,7 @@
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <div class="custom-file mb-2">
-                                        <input type="file" name="photo" id="photo" class="custom-file-input">
-                                        <label for="photo" class="custom-file-label">이미지 파일</label>
+                                        {{ form }}
                                     </div>
                                     <button type="submit" class="btn btn-primary form-control">전송</button>
                                 </div>
@@ -27,3 +26,8 @@
         </div>
 </div>
 {% endblock %}
+
+<!--
+<input type="file" name="photo" id="id-photo" class="custom-file-input">
+                                        <label for="id-photo" class="custom-file-label">이미지 파일</label>
+-->
