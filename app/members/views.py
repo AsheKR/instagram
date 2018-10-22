@@ -86,15 +86,14 @@ def signup_view(request):
 
         if User.objects.filter(username=username).exists():
             context['error'] = username + "은 이미 사용중 입니다."
-            return render(request, 'members/signup.html', context)
         elif password1 != password2:
             context['error'] = "패스워드 값이 일치하지 않습니다."
-            return render(request, 'members/signup.html', context)
         else:
             # create_user 를 사용하여야 정상적인 로그인이 가능하다.
             user = User.objects.create_user(username=username, password=password1)
             login(request, user)
             return redirect('posts:post_list')
+        return render(request, 'members/signup.html', context)
 
 
 
