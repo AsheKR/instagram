@@ -24,6 +24,12 @@ def post_list(request):
 
 
 def post_create(request):
+    # 해당 뷰로 왔는데
+    # User가 로그인 된 상태가 아니라면
+    # post:post_list로 보내기
+    if not request.user.is_authenticated:
+        return redirect('posts:post_list')
+
     # 1. form 구현 input[type=file], button[submit]
     # 2. /posts/create/ uRL에 이 view를 연결
     # 3. base.html 의 '+ Add Post' 텍스트를 갖는 a 링크 하나 추가
