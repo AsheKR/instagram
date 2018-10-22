@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
 from .forms import LoginForm, SignupForm
@@ -33,7 +34,8 @@ def login_view(request):
         else:
             form = LoginForm(request.POST)
             context = {
-                'form': form
+                'form': form,
+                'error': "가입 된 사람이 없습니다."
             }
             return render(request, 'members/login.html', context)
 
@@ -44,6 +46,7 @@ def login_view(request):
         }
 
         return render(request, 'members/login.html', context)
+
 
 def logout_view(request):
     # URL: /members/logout/
@@ -68,7 +71,33 @@ def signup_view(request):
     # username, password1, password2
     # 나머지 요소들은 login.html의 요소를 최대한 재활용
     if request.method == "POST":
-        pass
+        # 1. request.POST에 전달된 username, password1, password2를 각각 해당 이름의 변수에 할당
+        # 2-1. username에 해당한 User가 이미 있다면 사용자명 {{ username }} 은 이미 사용중입니다.
+        # 2-2. password1과 password2가 일치하지 않는다면 비밀번호와 비밀번호 확인란의 값이 일치하지 않습니다.
+        # 3. 위 두경우 모두 아니면 새 User 객체 생성, 로그인 후 'posts:post_list'로 리다이렉트 처리
+        username = request.POST['username']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
+
+        form = SignupForm(request.POST)
+        context = {
+            'form': form,
+        }
+
+        if User.objects.filter(username=username).exists():
+            context['error'] = username + "은 이미 사용중 입니다."
+            return render(request, 'members/signup.html', context)
+        elif password1 != password2:
+            context['error'] = "패스워드 값이 일치하지 않습니다."
+            return render(request, 'members/signup.html', context)
+        else:
+            # create_user 를 사용하여야 정상적인 로그인이 가능하다.
+            user = User.objects.create_user(username=username, password=password1)
+            login(request, user)
+            return redirect('posts:post_list')
+
+
+
     else:
         form = SignupForm()
         context = {
