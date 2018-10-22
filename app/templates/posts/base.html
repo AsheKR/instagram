@@ -25,51 +25,61 @@
 			cursor: pointer
 		}
 
+
+
+
+
+
     </style>
 </head>
 <body>
 <div id="wrap">
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        <!--좌측 제목-->
-        <a href="{% url 'posts:post_list' %}" class="navbar-brand">Instagram</a>
-        <!--검색 form-->
-        <form action="#" class="form-inline ml-md-auto">
-            <input type="text" class="form-control" placeholder="검색">
-        </form>
-        <!--우측 3개 메뉴 버튼-->
-        <ul class="navbar-nav ml-md-auto">
-            <li class="nav-item">
-                <a href="{% url 'posts:post_create' %}" class="nav-link"><i class="far fa-plus-square nav_far"></i></a>
-            </li>
-            <li class="nav-item mr-sm-1">
-                <a href="#" class="nav-link"><i class="far fa-compass nav_far"></i></a>
-            </li>
-            <li class="nav-item mr-sm-1">
-                <a href="#" class="nav-link"><i class="far fa-heart nav_far"></i></a>
-            </li>
-            <li class="nav-item mr-sm-1">
-                <a href="#" class="nav-link"><i class="far fa-user nav_far"></i></a>
-            </li>
-            {% if user.is_authenticated %}
-            <li class="nav-item mr-sm-1">
-                <form action="{% url 'members:logout_view' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="nav-link no_button"><i class="fas fa-sign-out-alt nav_far"></i>
-                    </button>
-                </form>
-            </li>
-            {% else %}
-            <li class="nav-item mr-sm-1">
-                <a href="" class="nav-link"><i class="fas fa-sign-in-alt nav_far"></i></a>
-            </li>
-            <li class="nav-item mr-sm-1">
-                <a href="#" class="nav-link"><i class="fas fa-user-plus nav_far"></i></a>
-            </li>
-            {% endif %}
-        </ul>
+        <div class="navbar-header">
+            <!--좌측 제목-->
+            <a href="{% url 'posts:post_list' %}" class="navbar-brand navbar-left">Instagram</a>
+
+            <!--검색 form-->
+            <form action="#" class="form-inline ml-md-auto navbar-center">
+                <input type="text" class="form-control" placeholder="검색">
+            </form>
+        </div>
+            <!--우측 3개 메뉴 버튼-->
+            <ul class="navbar-nav navbar-right">
+                <li>
+                    <a href="{% url 'posts:post_create' %}" class="nav-link"><i class="far fa-plus-square nav_far"></i></a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link"><i class="far fa-compass nav_far"></i></a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link"><i class="far fa-heart nav_far"></i></a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link"><i class="far fa-user nav_far"></i></a>
+                </li>
+                {% if user.is_authenticated %}
+                <li>
+                    <form action="{% url 'members:logout_view' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link no_button"><i class="fas fa-sign-out-alt nav_far"></i>
+                        </button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item mr-sm-1">
+                    <a href="{% url 'members:login_view' %}" class="nav-link"><i class="fas fa-sign-in-alt nav_far"></i></a>
+                </li>
+                <li class="nav-item mr-sm-1">
+                    <a href="{% url 'members:signup_view' %}" class="nav-link"><i class="fas fa-user-plus nav_far"></i></a>
+                </li>
+                {% endif %}
+            </ul>
     </nav>
     {% block content %}
     {% endblock %}
 </div>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
 </html>

@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
-from .forms import LoginForm
+from .forms import LoginForm, SignupForm
+
 
 # Create your views here.
 def login_view(request):
@@ -57,3 +58,20 @@ def logout_view(request):
     if request.method == 'POST':
         logout(request)
         return redirect('posts:post_list')
+
+
+def signup_view(request):
+    # URL: /members/signup/
+    # Template: members/signup.html
+    # Form:
+    # SignupForm
+    # username, password1, password2
+    # 나머지 요소들은 login.html의 요소를 최대한 재활용
+    if request.method == "POST":
+        pass
+    else:
+        form = SignupForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'members/signup.html', context)
