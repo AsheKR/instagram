@@ -21,7 +21,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('posts/', include('posts.urls'))
+    path('posts/', include('posts.urls')),
+    path('members/', include('members.urls')),
     # path 타입은 / 를 포함한 문자열을 찾는다.
     #path('media/<path:path>/', views.media_serve)
 ]
