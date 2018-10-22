@@ -14,9 +14,18 @@
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <div class="custom-file mb-2">
-                                        {{ form }}
+                                        <div class="form-group">
+                                            {{ form.photo }}
+                                            <label for="{{ form.photo.id_for_label }}" class="custom-file-label">이미지 파일</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ form.comment.id_for_label }}">Comment</label>
+                                            {{ form.comment }}
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary form-control">전송</button>
+                                        </div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary form-control">전송</button>
                                 </div>
                             </form>
                         </div>

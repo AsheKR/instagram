@@ -1,7 +1,7 @@
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 
-from members.models import User
+# from members.models import User
 from .models import Post
 from .forms import PostCreateForm
 
@@ -22,13 +22,14 @@ def post_list(request):
 
     return render(request, 'posts/post_list.html', context)
 
+
 def post_create(request):
     # 1. form 구현 input[type=file], button[submit]
     # 2. /posts/create/ uRL에 이 view를 연결
     # 3. base.html 의 '+ Add Post' 텍스트를 갖는 a 링크 하나 추가
     #   {% url %} 태그를 사용해 포스트 생성 링크 검
     if request.method == 'POST':
-        author = User.objects.get(pk=1)
+        author = request.user
         photo = request.FILES['photo']
 
         Post.objects.create(author=author, photo=photo)
