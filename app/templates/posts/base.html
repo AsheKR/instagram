@@ -10,47 +10,66 @@
     <!-- 브라우저마다 다른 CSS 기본 설정값들을 같게 맞춰줌 -->
     <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <title>Instagram</title>
+
+    <style>
+		.nav_far {
+			font-size: 26px;
+		}
+
+		.no_button {
+			border:none;
+			background: transparent;
+			cursor: pointer
+		}
+
+    </style>
 </head>
 <body>
-    <div id="wrap">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-			<!--좌측 제목-->
-			<a href="{% url 'posts:post_list' %}" class="navbar-brand">Instagram</a>
-			<!--검색 form-->
-			<form action="#" class="form-inline ml-md-auto">
-				<input type="text" class="form-control" placeholder="검색">
-			</form>
-			<!--우측 3개 메뉴 버튼-->
-			<ul class="navbar-nav ml-md-auto">
-				<li class="nav-item">
-					<a href="{% url 'posts:post_create' %}" class="nav-link btn btn-outline-primary">+ Add Post</a>
-				</li>
-				<li class="nav-item mr-sm-1">
-					<a href="#" class="nav-link btn btn-outline-secondary">Explore</a>
-				</li>
-				<li class="nav-item mr-sm-1">
-					<a href="#" class="nav-link btn btn-outline-secondary">Favorites</a>
-				</li>
-				<li class="nav-item mr-sm-1">
-					<a href="#" class="nav-link btn btn-outline-secondary">Profile</a>
-				</li>
-				{% if user.is_authenticated %}
-				<li class="nav-item mr-sm-1">
-					<a href="#" class="nav-link btn btn-outline-secondary">logout</a>
-				</li>
-				{% else %}
-				<li class="nav-item mr-sm-1">
-					<a href="#" class="nav-link btn btn-outline-secondary">login</a>
-				</li>
-				<li class="nav-item mr-sm-1">
-					<a href="#" class="nav-link btn btn-outline-secondary">register</a>
-				</li>
-				{% endif %}
-			</ul>
-		</nav>
-        {% block content %}
-        {% endblock %}
-    </div>
+<div id="wrap">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <!--좌측 제목-->
+        <a href="{% url 'posts:post_list' %}" class="navbar-brand">Instagram</a>
+        <!--검색 form-->
+        <form action="#" class="form-inline ml-md-auto">
+            <input type="text" class="form-control" placeholder="검색">
+        </form>
+        <!--우측 3개 메뉴 버튼-->
+        <ul class="navbar-nav ml-md-auto">
+            <li class="nav-item">
+                <a href="{% url 'posts:post_create' %}" class="nav-link"><i class="far fa-plus-square nav_far"></i></a>
+            </li>
+            <li class="nav-item mr-sm-1">
+                <a href="#" class="nav-link"><i class="far fa-compass nav_far"></i></a>
+            </li>
+            <li class="nav-item mr-sm-1">
+                <a href="#" class="nav-link"><i class="far fa-heart nav_far"></i></a>
+            </li>
+            <li class="nav-item mr-sm-1">
+                <a href="#" class="nav-link"><i class="far fa-user nav_far"></i></a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item mr-sm-1">
+                <form action="{% url 'members:logout_view' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link no_button"><i class="fas fa-sign-out-alt nav_far"></i>
+                    </button>
+                </form>
+            </li>
+            {% else %}
+            <li class="nav-item mr-sm-1">
+                <a href="" class="nav-link"><i class="fas fa-sign-in-alt nav_far"></i></a>
+            </li>
+            <li class="nav-item mr-sm-1">
+                <a href="#" class="nav-link"><i class="fas fa-user-plus nav_far"></i></a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% block content %}
+    {% endblock %}
+</div>
 </body>
 </html>
