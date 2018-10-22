@@ -32,38 +32,47 @@
 
 
 
+
+
+
+
+
+
+
     </style>
 </head>
 <body>
 <div id="wrap">
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
         <!--좌측 제목-->
-        <div class="navbar-nav mr-auto w-100 order-1 order-md-0">
-            <a href="{% url 'posts:post_list' %}" class="navbar-brand navbar-left">Instagram</a>
-        </div>
+        <a href="{% url 'posts:post_list' %}" class="navbar-brand">Instagram</a>
         <!--검색 form-->
-        <div class="mx-auto order-0">
-            <form action="#" class="form-inline">
-                <input type="text" class="form-control" placeholder="검색">
-            </form>
-        </div>
+        <form action="#" class="form-inline">
+            <input type="text" class="form-control" placeholder="검색">
+        </form>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo"
+                aria-controls="navbarTogglerDemo" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
         <!--우측 3개 메뉴 버튼-->
-        <div class="w-100 order-3">
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo">
             <ul class="navbar-nav">
-                <li>
-                    <a href="{% url 'posts:post_create' %}" class="nav-link"><i class="far fa-plus-square nav_far"></i></a>
+                <li class="nav-item">
+                    <a href="{% url 'posts:post_create' %}" class="nav-link"><i
+                            class="far fa-plus-square nav_far"></i></a>
                 </li>
-                <li>
+                <li class="nav-item">
                     <a href="#" class="nav-link"><i class="far fa-compass nav_far"></i></a>
                 </li>
-                <li>
+                <li class="nav-item">
                     <a href="#" class="nav-link"><i class="far fa-heart nav_far"></i></a>
                 </li>
-                <li>
+                <li class="nav-item">
                     <a href="#" class="nav-link"><i class="far fa-user nav_far"></i>{{ user }}</a>
                 </li>
                 {% if user.is_authenticated %}
-                <li>
+                <li class="nav-item">
                     <form action="{% url 'members:logout_view' %}" method="POST">
                         {% csrf_token %}
                         <button type="submit" class="nav-link no_button"><i class="fas fa-sign-out-alt nav_far"></i>
@@ -71,11 +80,13 @@
                     </form>
                 </li>
                 {% else %}
-                <li>
-                    <a href="{% url 'members:login_view' %}" class="nav-link"><i class="fas fa-sign-in-alt nav_far"></i></a>
+                <li class="nav-item">
+                    <a href="{% url 'members:login_view' %}" class="nav-link"><i
+                            class="fas fa-sign-in-alt nav_far"></i></a>
                 </li>
-                <li>
-                    <a href="{% url 'members:signup_view' %}" class="nav-link"><i class="fas fa-user-plus nav_far"></i></a>
+                <li class="nav-item">
+                    <a href="{% url 'members:signup_view' %}" class="nav-link"><i
+                            class="fas fa-user-plus nav_far"></i></a>
                 </li>
                 {% endif %}
             </ul>
