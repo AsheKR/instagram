@@ -27,6 +27,21 @@ class PostCreateForm(forms.Form):
     def save(self, **kwargs):
         post = Post.objects.create(
             photo=self.cleaned_data['photo'],
-            **kwargs,
+            author=kwargs.get('author'),
         )
+
+        # 1. POST 생성시 Comment 생성 (선택적)
+        # 만약 comment 항목이 있다면
+        # 생성한 Post에 연결되는 Comment를 생성
+        # author=request.user
+        # post=post 가 되도록
+
+        # 2. post_list에서 각 Post 의 댓글 목록 출력
+
+        if self.cleaned_data.get('comment'):
+            post.comment_set.create(
+                author=kwargs.get('author'),
+                content=self.cleaned_data.get('comment')
+            )
+
         return post

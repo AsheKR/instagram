@@ -3,18 +3,28 @@
 {% block content %}
 <div class="container">
     {% for post in posts %}
-        <div class="row justify-content-center mb-4">
-            <div class="col col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        {{ post.author }}
-                    </div>
-                    <div class="card-body">
-                    <img src="{{ post.photo.url }}" alt="" class="card-img-top">
-                    </div>
+    <div class="row justify-content-center mb-4">
+        <div class="col col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    {{ post.author }}
                 </div>
+                <div class="card-body">
+                    <img src="{{ post.photo.url }}" alt="" class="card-img-top">
+                </div>
+                {% if post.comment_set.all %}
+                <ul class="list-group list-group-flush">
+                    {% for comment in post.comment_set.all %}
+                        <li class="list-group-item text-center">
+                            <span class="float-left">{{ comment.author }}</span>
+                            <span class="text-center">{{ comment.content }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
         </div>
+    </div>
     {% endfor %}
 </div>
 {% endblock %}
