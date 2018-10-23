@@ -10,14 +10,12 @@
                 </div>
                 <div class="card-body">
                     <div class="card-text">
-                        {% for error in form.errors %}
-                            <div class="alert alert-primary" role="alert">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
                         <form action="{% url 'members:signup_view' %}" method="post">
                             {% csrf_token %}
                             <div class="form-group">
+                                {% for error in form.errors.values %}
+                                    {{ error|safe }}
+                                {% endfor %}
                                 <div class="custom-file mb-2">
                                     {% for field in form %}
                                     <div class="form-group">

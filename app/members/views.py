@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, DivErrorList
 
 
 # Create your views here.
@@ -74,7 +74,7 @@ def signup_view(request):
     if request.method == "POST":
         # POST로 전달된 데이터를 확인
         # 올바르다면 user를 생성하고 post_list 화면으로 이동
-        form = SignupForm(request.POST)
+        form = SignupForm(request.POST, error_class=DivErrorList)
 
         if form.is_valid():
             user = User.objects.create_user(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password1'))
@@ -86,8 +86,6 @@ def signup_view(request):
         # 동적으로 form을 렌더링
     else:
         form = SignupForm()
-
-    print(form.errors)
 
     context['form'] = form
     return render(request, 'members/signup.html', context)

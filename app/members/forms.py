@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.forms.utils import ErrorList
 
 
 class LoginForm(forms.Form):
@@ -56,3 +57,13 @@ class SignupForm(forms.Form):
 
         if password1 != password2:
             raise forms.ValidationError("패스워드가 일치하지 않습니다!")
+
+
+class DivErrorList(ErrorList):
+    def __str__(self):
+        return self.as_divs()
+
+    def as_divs(self):
+        if not self: return ''
+        str = ''.join(['<div class="alert alert-primary" role="alert">%s</div>' % e for e in self])
+        return str
