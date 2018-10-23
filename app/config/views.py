@@ -1,7 +1,7 @@
 import os
 
 from django.http import FileResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from django.conf import settings
 
@@ -16,3 +16,8 @@ from django.conf import settings
 #     #   minetypes.guess_type(경로 또느 파일 명)
 #     file_path = os.path.join(settings.MEDIA_ROOT, path)
 #     return FileResponse(open(file_path, 'rb'), content_type='image/jpeg')
+
+
+# RedirectView를 사용해서 따로 View를 생성하지 않아도 된다.
+# def index_redirect(request):
+#     return redirect('posts:post_list')
