@@ -77,7 +77,7 @@ def signup_view(request):
         form = SignupForm(request.POST, error_class=DivErrorList)
 
         if form.is_valid():
-            user = User.objects.create_user(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password1'))
+            user = form.save()
             login(request, user)
             return redirect('posts:post_list')
 

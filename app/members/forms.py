@@ -58,6 +58,12 @@ class SignupForm(forms.Form):
         if password1 != password2:
             raise forms.ValidationError("패스워드가 일치하지 않습니다!")
 
+    def save(self):
+        if self.errors:
+            raise ValueError('폼 데이터 유효성 검증에 실패했습니다.')
+        return User.objects.create_user(username=self.cleaned_data.get('username'),
+                                        password=self.cleaned_data.get('password1'))
+
 
 class DivErrorList(ErrorList):
     def __str__(self):
