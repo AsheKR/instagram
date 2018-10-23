@@ -10,10 +10,12 @@
                 </div>
                 <div class="card-body">
                     <div class="card-text">
-                        {% if error %}
-                        <div class="alert alert-primary" role="alert">
-                            {{ error }}
-                        </div>
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                            <div class="alert alert-primary" role="alert">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
                         {% endif %}
                         <form action="{% url 'members:login_view' %}" method="post">
                             {% csrf_token %}
