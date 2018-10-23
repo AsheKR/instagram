@@ -70,36 +70,24 @@ def signup_view(request):
     # SignupForm
     # username, password1, password2
     # 나머지 요소들은 login.html의 요소를 최대한 재활용
+    context = {}
     if request.method == "POST":
-        # 1. request.POST에 전달된 username, password1, password2를 각각 해당 이름의 변수에 할당
-        # 2-1. username에 해당한 User가 이미 있다면 사용자명 {{ username }} 은 이미 사용중입니다.
-        # 2-2. password1과 password2가 일치하지 않는다면 비밀번호와 비밀번호 확인란의 값이 일치하지 않습니다.
-        # 3. 위 두경우 모두 아니면 새 User 객체 생성, 로그인 후 'posts:post_list'로 리다이렉트 처리
-        username = request.POST['username']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-
+        # POST로 전달된 데이터를 확인
+        # 올바르다면 user를 생성하고 post_list 화면으로 이동
         form = SignupForm(request.POST)
-        context = {
-            'form': form,
-        }
 
-        if User.objects.filter(username=username).exists():
-            context['error'] = username + "은 이미 사용중 입니다."
-        elif password1 != password2:
-            context['error'] = "패스워드 값이 일치하지 않습니다."
-        else:
-            # create_user 를 사용하여야 정상적인 로그인이 가능하다.
-            user = User.objects.create_user(username=username, password=password1)
+        if form.is_valid():
+            user = User.objects.create_user(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password1'))
             login(request, user)
             return redirect('posts:post_list')
-        return render(request, 'members/signup.html', context)
 
-
-
+        # GET요청시 또는 POST 요청 데이터가 올바르지 않을경우
+        # 빈 Form 또는 올바르지 않은 데이터에 대한 정보가 포함된 Form을 전달해서
+        # 동적으로 form을 렌더링
     else:
         form = SignupForm()
-        context = {
-            'form': form
-        }
-        return render(request, 'members/signup.html', context)
+
+    print(form.errors)
+
+    context['form'] = form
+    return render(request, 'members/signup.html', context)
