@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 
@@ -23,28 +24,31 @@ def post_list(request):
     return render(request, 'posts/post_list.html', context)
 
 
+@login_required
 def post_create(request):
     # 해당 뷰로 왔는데
     # User가 로그인 된 상태가 아니라면
     # post:post_list로 보내기
-    if not request.user.is_authenticated:
-        return redirect('posts:post_list')
+
+    # Django의 Decorator를 사용해서 로그인 체크 기능을 만들어줄 수 있다.
+    # if not request.user.is_authenticated:
+    #     return redirect('members:login')
 
     # 1. form 구현 input[type=file], button[submit]
     # 2. /posts/create/ uRL에 이 view를 연결
     # 3. base.html 의 '+ Add Post' 텍스트를 갖는 a 링크 하나 추가
     #   {% url %} 태그를 사용해 포스트 생성 링크 검
     if request.method == 'POST':
-        author = request.user
-        photo = request.FILES['photo']
+        form = PostCreateForm(request.POST, request.FILES)
 
-        Post.objects.create(author=author, photo=photo)
-        return redirect('posts:post_list')
+        if form.is_valid():
+            form.save(author=request.user)
+            return redirect('posts:post_list')
     else:
         # GET 요청의 경우, 빈 Form인스턴ㅅ트를 context에 담아 전달
         # Tempatle에는 `form` 키로 해당 Form 인스턴스 속성을 사용 가능
         form = PostCreateForm()
-        context = {
-            'form': form
-        }
-        return render(request, 'posts/post_create.html', context)
+    context = {
+        'form': form
+    }
+    return render(request, 'posts/post_create.html', context)

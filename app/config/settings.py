@@ -25,6 +25,9 @@ MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 
+# LOGIN Redirect할 곳
+LOGIN_URL = 'members:login_view'
+
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
