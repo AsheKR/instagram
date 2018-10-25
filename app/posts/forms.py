@@ -3,6 +3,20 @@ from django import forms
 from posts.models import Post, Comment
 
 
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 3,
+                }
+            )
+        }
+
+
 class CommentCreateForm(forms.Form):
     content = forms.CharField(
         widget=forms.Textarea(

@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 
 # from members.models import User
 from .models import Post, Comment
-from .forms import PostCreateForm, CommentCreateForm
+from .forms import PostCreateForm, CommentCreateForm, CommentForm
 
 
 def post_list(request):
@@ -16,7 +16,7 @@ def post_list(request):
     #       posts/ 로 접근시 이 view 가 처리
 
     posts = Post.objects.all()
-    comment_form = CommentCreateForm()
+    comment_form = CommentForm()
 
     context = {
         'comment_form': comment_form,
