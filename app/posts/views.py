@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 
 # from members.models import User
 from .models import Post, Comment
-from .forms import PostCreateForm
+from .forms import PostCreateForm, CommentCreateForm
 
 
 def post_list(request):
@@ -16,8 +16,10 @@ def post_list(request):
     #       posts/ 로 접근시 이 view 가 처리
 
     posts = Post.objects.all()
+    comment_form = CommentCreateForm()
 
     context = {
+        'comment_form': comment_form,
         'posts': posts,
 
     }
@@ -71,7 +73,13 @@ def comment_create(request, post_pk):
     """
 
     if request.method == 'POST':
-        content = request.POST['content']
         post = Post.objects.get(pk=post_pk)
-        Comment.objects.create(content=content, author=request.user, post=post)
-        return redirect('posts:post_list')
+        form = CommentCreateForm(request.POST)
+
+        if form.is_valid():
+            form.save(author=request.user, post=post)
+            return redirect('posts:post_list')
+
+        # content = request.POST['content']
+        # Comment.objects.create(content=content, author=request.user, post=post)
+        # return redirect('posts:post_list')

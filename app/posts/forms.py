@@ -1,6 +1,27 @@
 from django import forms
 
-from posts.models import Post
+from posts.models import Post, Comment
+
+
+class CommentCreateForm(forms.Form):
+    content = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'rows': '3',
+            }
+        ),
+        label='',
+        required=True,
+    )
+
+    def save(self, **kwargs):
+        comment = Comment.objects.create(
+            content=self.cleaned_data['content'],
+            **kwargs
+        )
+
+        return comment
 
 
 class PostCreateForm(forms.Form):
