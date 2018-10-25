@@ -122,3 +122,11 @@ def comment_create(request, post_pk):
         # content = request.POST['content']
         # Comment.objects.create(content=content, author=request.user, post=post)
         # return redirect('posts:post_list')
+
+def tag_post_list(request, tag_name):
+    print(tag_name)
+    posts = Post.objects.filter(comment__tags__name=tag_name)
+    context = {
+        'posts': posts,
+    }
+    return render(request, 'posts/tag_post_list.html', context)

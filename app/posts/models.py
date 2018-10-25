@@ -53,6 +53,23 @@ class Comment(models.Model):
         tags = [HashTag.objects.get_or_create(name=name)[0] for name in re.findall(self.TAG_PATTERN, self.content)]
         self.tags.set(tags)
 
+    @property
+    def html(self):
+        # 자신의 content 속성값에서 #문자열 -> <a href="/explore/tags/<문자열>">#문자열</a>
+
+        # /explorer/tags/{태그명}/ URL에서
+        # 해당 태그를 가진 POST 목록을 보여주는 view, url, template 구현
+        # URL name : tag_post_list
+        # view:
+        #       tag_post_list(request, tag_name)
+        # template:
+        #       /posts/tag_post_list.html
+
+        # base.html에 있는 검색창에 값을 입력하고 Enter시 (Submit)
+        # 해당 값을 사용해 위에서 만든 view로 이동
+        return re.sub(r'#(\w+)', r'<a href="/explore/tags/\1">#\1</a>', self.content)
+
+
     class Meta:
         verbose_name = '댓글'
         verbose_name_plural = f'{verbose_name} 목록'

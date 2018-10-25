@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 
+from posts import views as posts_views
 from . import views
 
 urlpatterns = [
@@ -26,6 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', include('posts.urls')),
     path('members/', include('members.urls')),
+    path('explore/tags/<str:tag_name>', posts_views.tag_post_list, name="tag_post_list"),
     # path 타입은 / 를 포함한 문자열을 찾는다.
     #path('media/<path:path>/', views.media_serve)
 ]
