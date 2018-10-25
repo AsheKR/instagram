@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from django.db import models
 from django.conf import settings
@@ -26,6 +27,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    TAG_PATTERN = re.compile(r'#(\w+)')
     # 내가 다수인쪽에 ForeignKey를 작성해야함
     post = models.ForeignKey(
         Post,
@@ -44,6 +46,12 @@ class Comment(models.Model):
         blank=True,
         verbose_name='해시태그 목록'
     )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        content = self.content
+        tags = [HashTag.objects.get_or_create(name=name)[0] for name in re.findall(self.TAG_PATTERN, self.content)]
+        self.tags.set(tags)
 
     class Meta:
         verbose_name = '댓글'

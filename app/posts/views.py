@@ -106,11 +106,12 @@ def comment_create(request, post_pk):
             # 해시태그에 해당하는 문자열을 가져와서
             # HashTag객체를 가져오거나 생성(get_or_create)
             # 이후 comment.tags에 해당 객체들을 추가
-            content = comment.content
-            hashtag_list = re.findall(r'#(\w+)', content)
-            tags = [HashTag.objects.get_or_create(name=name)[0] for name in re.findall(r'#(\w+)', content)]
-            comment.tags.set(tags)
+            #       이 내용은 모델의 Save() 메서드로 옮김
+            # content = comment.content
+            # tags = [HashTag.objects.get_or_create(name=name)[0] for name in re.findall(r'#(\w+)', content)]
+            # comment.tags.set(tags)
 
+            # hashtag_list = re.findall(r'#(\w+)', content)
             # for hashtag in hashtag_list:
             #     tag = HashTag.objects.get_or_create(name=hashtag)
             #     if tag[1]:
