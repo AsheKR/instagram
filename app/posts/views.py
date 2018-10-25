@@ -3,7 +3,7 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 
 # from members.models import User
-from .models import Post
+from .models import Post, Comment
 from .forms import PostCreateForm
 
 
@@ -53,3 +53,25 @@ def post_create(request):
         'form': form
     }
     return render(request, 'posts/post_create.html', context)
+
+
+def comment_create(request, post_pk):
+    """
+    post_pk에 해당하는 Post에 댓글을 생성하는 view
+    'POST'메서드 요청만 처리
+
+    'content' 키로 들어온 값을 사용해 댓글 생성. 작성자는 요청한 User
+    URL: /posts/<post_pk>/comments/create/
+
+    댓글 생성 완료 후에는 posts:post-list로 리다이렉트
+
+    :param request:
+    :param post_pk:
+    :return:
+    """
+
+    if request.method == 'POST':
+        content = request.POST['content']
+        post = Post.objects.get(pk=post_pk)
+        Comment.objects.create(content=content, author=request.user, post=post)
+        return redirect('posts:post_list')
