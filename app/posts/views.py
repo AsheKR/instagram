@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 
 # from members.models import User
 from .models import Post, Comment
-from .forms import PostCreateForm, CommentCreateForm, CommentForm
+from .forms import PostCreateForm, CommentCreateForm, CommentForm, PostForm
 
 
 def post_list(request):
@@ -41,16 +41,34 @@ def post_create(request):
     # 2. /posts/create/ uRL에 이 view를 연결
     # 3. base.html 의 '+ Add Post' 텍스트를 갖는 a 링크 하나 추가
     #   {% url %} 태그를 사용해 포스트 생성 링크 검
-    if request.method == 'POST':
-        form = PostCreateForm(request.POST, request.FILES)
 
+    if request.method == 'POST':
+        #           ModelForm
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save(author=request.user)
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+
+            comment_content = form.cleaned_data['comment']
+
+            if comment_content:
+                post.comment_set.create(
+                    author=request.user,
+                    content=form.cleaned_data['comment'],
+                )
             return redirect('posts:post_list')
+
+
+        #           PostCreateForm
+        # form = PostCreateForm(request.POST, request.FILES)
+        # if form.is_valid():
+        #     form.save(author=request.user)
+        #     return redirect('posts:post_list')
     else:
         # GET 요청의 경우, 빈 Form인스턴ㅅ트를 context에 담아 전달
         # Tempatle에는 `form` 키로 해당 Form 인스턴스 속성을 사용 가능
-        form = PostCreateForm()
+        form = PostForm()
     context = {
         'form': form
     }

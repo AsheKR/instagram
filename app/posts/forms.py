@@ -38,6 +38,33 @@ class CommentCreateForm(forms.Form):
         return comment
 
 
+class PostForm(forms.ModelForm):
+    comment = forms.CharField(
+        # 폼이 반드시 채워져 있을 필요는 없음
+        required=False,
+        # HTML 렌더링 위젯으로 teatarea 사용
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'rows': '3',
+            }
+        ),
+    )
+
+    # 1. posts.views.post_create
+    # 2. templates/posts/post_create.html
+    class Meta:
+        model = Post
+        fields = ['photo']
+        widgets = {
+            'photo': forms.ClearableFileInput(
+                attrs={
+                    'class': 'custom-file-input'
+                }
+            ),
+        }
+
+
 class PostCreateForm(forms.Form):
     photo = forms.ImageField(
         widget=forms.FileInput(
