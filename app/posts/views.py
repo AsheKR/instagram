@@ -1,9 +1,11 @@
+import re
+
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 
 # from members.models import User
-from .models import Post, Comment
+from .models import Post, Comment, HashTag
 from .forms import PostCreateForm, CommentCreateForm, CommentForm, PostForm
 
 
@@ -92,10 +94,28 @@ def comment_create(request, post_pk):
 
     if request.method == 'POST':
         post = Post.objects.get(pk=post_pk)
-        form = CommentCreateForm(request.POST)
+        form = CommentForm(request.POST)
 
         if form.is_valid():
-            form.save(author=request.user, post=post)
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+
+            # Comment가 가진 content 속성에서 해시태그에 해당하는 문자열을 가져와서
+            # 해시태그에 해당하는 문자열을 가져와서
+            # HashTag객체를 가져오거나 생성(get_or_create)
+            # 이후 comment.tags에 해당 객체들을 추가
+            content = comment.content
+            hashtag_list = re.findall(r'#(\w+)', content)
+            tags = [HashTag.objects.get_or_create(name=name)[0] for name in re.findall(r'#(\w+)', content)]
+            comment.tags.set(tags)
+
+            # for hashtag in hashtag_list:
+            #     tag = HashTag.objects.get_or_create(name=hashtag)
+            #     if tag[1]:
+            #         comment.tags.add(tag[0])
+
             return redirect('posts:post_list')
 
         # content = request.POST['content']

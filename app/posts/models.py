@@ -51,7 +51,7 @@ class Comment(models.Model):
 
 
 class HashTag(models.Model):
-    name = models.CharField('태그명', max_length=100)
+    name = models.CharField('태그명', max_length=100, unique=True)
 
     class Meta:
         verbose_name = '해시태그'
