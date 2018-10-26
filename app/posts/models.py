@@ -46,12 +46,20 @@ class Comment(models.Model):
         blank=True,
         verbose_name='해시태그 목록'
     )
+    # Commnet 가 save()에서 호출 될 때, content의 내용으로 이 필드를 자동으로 생성
+    _html = models.TextField("태그가 Html화된 댓글 내용", blank=True)
 
     def save(self, *args, **kwargs):
+        def save_html():
+            self._html = re.sub(self.TAG_PATTERN, r'<a href="/explore/tags/\1">#\1</a>', self.content)
+
+        def save_tags():
+            tags = [HashTag.objects.get_or_create(name=name)[0] for name in re.findall(self.TAG_PATTERN, self.content)]
+            self.tags.set(tags)
+
+        save_html()
         super().save(*args, **kwargs)
-        content = self.content
-        tags = [HashTag.objects.get_or_create(name=name)[0] for name in re.findall(self.TAG_PATTERN, self.content)]
-        self.tags.set(tags)
+        save_tags()
 
     @property
     def html(self):
@@ -67,7 +75,7 @@ class Comment(models.Model):
 
         # base.html에 있는 검색창에 값을 입력하고 Enter시 (Submit)
         # 해당 값을 사용해 위에서 만든 view로 이동
-        return re.sub(r'#(\w+)', r'<a href="/explore/tags/\1">#\1</a>', self.content)
+        return self._html
 
 
     class Meta:
