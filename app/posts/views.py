@@ -158,7 +158,7 @@ def post_like_toggle(request, post_pk):
     # POST method에 대해서만 처리
 
     # request.user가 post_pk에 해당하는 POST에 Like Toggle 처리
-    post = get_object_or_404(Post, post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'POST':
         post.like_toggle(request.user)
 

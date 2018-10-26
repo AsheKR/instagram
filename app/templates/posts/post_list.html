@@ -26,7 +26,13 @@
                         <form action="{% url 'posts:post_like_toggle' post_pk=post.pk %}" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
-                                <button type="submit"><a href="#"><i class="far fa-heart nav_far"></i></a></button>
+                                <button type="submit"><a href="#">
+                                    {% if user in post.like_users.all %}
+                                    <i class="fas fa-heart nav_far"></i>
+                                    {% else %}
+                                    <i class="far fa-heart nav_far"></i>
+                                    {% endif %}
+                                </a></button>
                                 <span>{{ post.like_users.all|join:", " }} 이 좋아합니다.</span>
                             </div>
                         </form>

@@ -4,8 +4,6 @@ import re
 from django.db import models
 from django.conf import settings
 
-from members.forms import User
-
 
 class Post(models.Model):
     author = models.ForeignKey(
@@ -34,10 +32,6 @@ class Post(models.Model):
         verbose_name = '포스트'
         verbose_name_plural = f'{verbose_name} 목록'
         ordering = ['-pk']
-
-    @property
-    def like_user_list(self):
-        return ', '.join(list(map(lambda x: x.username, User.objects.filter(like_post=self.pk))))
 
     def like_toggle(self, user):
         now_like = PostLike.objects.get_or_create(post=self, user=user)
