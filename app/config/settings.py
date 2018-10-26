@@ -47,9 +47,6 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-# Auth
-AUTH_USER_MODEL = "members.User"
-
 INSTALLED_APPS = [
     'members.apps.MembersConfig',
     'posts.apps.PostsConfig',
@@ -126,6 +123,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Auth
+AUTH_USER_MODEL = "members.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/

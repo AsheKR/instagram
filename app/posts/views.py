@@ -2,7 +2,7 @@ import re
 
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # from members.models import User
 from django.urls import reverse
@@ -150,11 +150,16 @@ def tag_search(request):
     else:
         return redirect('posts:post_list')
 
+
+@login_required
 def post_like_toggle(request, post_pk):
     # URL: /posts/<post_pk>/like-toggle/
     # URL Name: 'posts:post-like-toggle'
     # POST method에 대해서만 처리
 
     # request.user가 post_pk에 해당하는 POST에 Like Toggle 처리
+    post = get_object_or_404(Post, post_pk)
+    if request.method == 'POST':
+        post.like_toggle(request.user)
 
-    pass
+    return redirect('posts:post_list')

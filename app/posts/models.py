@@ -40,12 +40,10 @@ class Post(models.Model):
         return ', '.join(list(map(lambda x: x.username, User.objects.filter(like_post=self.pk))))
 
     def like_toggle(self, user):
-        now_like = PostLike.objects.get(post=self, user=user)
-        now_liked = now_like.exists()
-        if now_like:
-            PostLike.objects.create(post=self, user=user)
-        else:
-            now_liked.get(post=self, user=user).delete()
+        now_like = PostLike.objects.get_or_create(post=self, user=user)
+        if not now_like[1]:
+            # 만약 created=True이면 해당 객체 삭제
+            now_like[0].delete()
 
 
 class Comment(models.Model):
