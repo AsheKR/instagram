@@ -50,8 +50,8 @@
         <!--좌측 제목-->
         <a href="{% url 'posts:post_list' %}" class="navbar-brand">Instagram</a>
         <!--검색 form-->
-        <form action="" class="form-inline">
-            <input type="text" class="form-control" name="" placeholder="검색">
+        <form action="{% url 'posts:tag_search' %}" class="form-inline">
+            <input type="text" class="form-control" name="search_keyword" placeholder="검색">
         </form>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo"
                 aria-controls="navbarTogglerDemo" aria-expanded="false" aria-label="Toggle navigation">

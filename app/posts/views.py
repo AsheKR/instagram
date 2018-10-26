@@ -5,6 +5,8 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 
 # from members.models import User
+from django.urls import reverse
+
 from .models import Post, Comment, HashTag
 from .forms import PostCreateForm, CommentCreateForm, CommentForm, PostForm
 
@@ -123,10 +125,27 @@ def comment_create(request, post_pk):
         # Comment.objects.create(content=content, author=request.user, post=post)
         # return redirect('posts:post_list')
 
+
 def tag_post_list(request, tag_name):
     print(tag_name)
-    posts = Post.objects.filter(comment__tags__name=tag_name)
+    posts = Post.objects.filter(comment__tags__name=tag_name).distinct()
     context = {
         'posts': posts,
     }
     return render(request, 'posts/tag_post_list.html', context)
+
+
+def tag_search(request):
+    # request.GET으로 전달된
+    # search_keyword 값을 적절히 활용해서
+    # 위의 tag_post_list view로 redirect
+    # URL: 'posts/tag_search/'
+    # URL Name: 'posts:tag_search'
+    # Template: 없음
+    keyword = request.GET.get('search_keyword')
+
+    if keyword:
+        substituted_keyword = re.sub(r'#|\s+', '', keyword)
+        return redirect('tag_post_list', substituted_keyword)
+    else:
+        return redirect('posts:post_list')
