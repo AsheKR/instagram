@@ -88,9 +88,19 @@ def signup_view(request):
 
 @login_required
 def profile(request):
-    form = UserProfileForm(instance=request.user)
-    context = {
-        'form': form,
-    }
+    #  GET요청시 로그인한 유저의 값을 가진 form 을 보여줌
+
+    # POST 요청시 현재 로그인한 유저의 값을 POST 요청에 담겨온 값을 사용해 수정
+
+    context = {}
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            context['success'] = "성공적으로 수정되었습니다."
+    else:
+        form = UserProfileForm(instance=request.user)
+    context['form'] = form
     return render(request, 'members/profile.html', context)
 

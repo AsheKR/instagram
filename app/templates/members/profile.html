@@ -3,15 +3,31 @@
 {% block content %}
 <div>
     <h2>Profile</h2>
-    <form action="">
+    {% if success %}
+        <div class="alert alert-success" role="alert">
+          {{ success }}
+        </div>
+    {% endif %}
+    <form action="" method="POST">
         {% csrf_token %}
         {% for field in form %}
-        <div class="form-group">
-            <label for="{{ field.id_for_label }}">
-                {{ field.label }}
-            </label>
-            {{ field }}
-        </div>
+            {% ifnotequal field.label "프로필 이미지" %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}" class="custom-control-label">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+            </div>
+            {% else %}
+                <div class="custom-file">
+                    {{ field }}
+                    <label for="{{ field.id_for_label }}" class="custom-file-label">
+                        {{ field.label }}
+                    </label>
+                </div>
+            {% endifnotequal %}
+
+
         {% endfor %}
         <button class="btn btn-primary btn-block" type="submit">수정</button>
     </form>
