@@ -17,6 +17,21 @@
                 <div class="card-body">
                     <img src="{{ post.photo.url }}" alt="" class="card-img-top">
                 </div>
+                <!--
+                    버튼의 텍스트에
+                    post_like_toogle의 좋아요 TOGGGLE 처리
+                 -->
+                 <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <form action="{% url 'posts:comment_create' post_pk=post.pk %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                    <a href="#"><i class="far fa-heart nav_far"></i></a>
+                                    <span>{{ post.like_users.all|join:", " }} 이 좋아합니다.</span>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
                 {% if post.comment_set.all %}
                 <ul class="list-group list-group-flush">
                     {% for comment in post.comment_set.all %}

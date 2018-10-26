@@ -4,6 +4,9 @@ import re
 from django.db import models
 from django.conf import settings
 
+from members.forms import User
+
+
 class Post(models.Model):
     author = models.ForeignKey(
         # <AppName>.<ModelName>
@@ -17,6 +20,13 @@ class Post(models.Model):
         upload_to='post',
     )
 
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='like_posts',
+        related_query_name='like_post',
+        through='PostLike',
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -24,6 +34,18 @@ class Post(models.Model):
         verbose_name = '포스트'
         verbose_name_plural = f'{verbose_name} 목록'
         ordering = ['-pk']
+
+    @property
+    def like_user_list(self):
+        return ', '.join(list(map(lambda x: x.username, User.objects.filter(like_post=self.pk))))
+
+    def like_toggle(self, user):
+        now_like = PostLike.objects.get(post=self, user=user)
+        now_liked = now_like.exists()
+        if now_like:
+            PostLike.objects.create(post=self, user=user)
+        else:
+            now_liked.get(post=self, user=user).delete()
 
 
 class Comment(models.Model):
@@ -92,3 +114,23 @@ class HashTag(models.Model):
 
     def __str__(self):
         return self.name
+
+
+#1. post_list에서 Like 한 유저 목록을 표시
+#       ex ) pby, parkboyoung, lhy 님이 좋아합니다.
+
+class PostLike(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name='작성자',
+    )
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        verbose_name='포스트',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (('user', 'post'), )
