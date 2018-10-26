@@ -15,6 +15,23 @@
     <title>Instagram</title>
 
     <style>
+        .square {
+            border: 1px solid black;
+            box-sizing: border-box;
+        }
+        .square:before{
+            content: '';
+            padding: 50% 0;
+            display: inline-block;
+        }
+
+        .square > .thumbnail {
+            display:block;
+            width:100%;
+            background-size:cover;
+            background-position: center center;
+        }
+
 		.nav_far {
 			font-size: 26px;
 		}

@@ -1,51 +1,12 @@
 {% extends 'posts/base.html' %}
 
 {% block content %}
-<div class="container">
+<div class="row">
     {% for post in posts %}
-    <div class="row justify-content-center mb-4">
-        <div class="col col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    {{ post.author }}
-                </div>
-                <div class="card-body">
-                    <img src="{{ post.photo.url }}" alt="" class="card-img-top">
-                </div>
-                {% if post.comment_set.all %}
-                <ul class="list-group list-group-flush">
-                    {% for comment in post.comment_set.all %}
-                    <li class="list-group-item text-center">
-                        <span class="float-left">{{ comment.author }}</span>
-                        <span class="text-center">{{ comment.html|safe }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-
-                <!--
-                    댓글 작성 form 구현
-                    1. 유저가 로그인 한 경우에만 보여지도록 함
-                    2. 내부 요소는 textarea와 버튼 하나
-                    3 action 속성의 값을 위의 'comment_create' view에 해당하는 URL로 지정
-                -->
-
-                {% if user.is_authenticated %}
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item text-center">
-                        <form action="{% url 'posts:comment_create' post_pk=post.pk %}" method="POST">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                {{ comment_form.content }}
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary form-control">댓글</button>
-                            </div>
-                        </form>
-                    </li>
-                </ul>
-                {% endif %}
-            </div>
+    <div class="col-4">
+        <div class="row square">
+            <a href="" class="thumbnail" style="background-image: url('{{ post.photo.url }}');">
+        </a>
         </div>
     </div>
     {% endfor %}
