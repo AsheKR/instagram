@@ -1,4 +1,6 @@
 {% extends 'posts/base.html' %}
+{% load static %}
+
 
 {% block content %}
 <div class="container">
@@ -7,7 +9,10 @@
         <div class="col col-lg-6">
             <div class="card">
                 <div class="card-header">
-                    {{ post.author }}
+                    <div style="width: 30px; height: 30px; display: inline-block;">
+                        <a href="#" class="rounded-circle profile_img"  style="background-image: url('{{ post.author.img_profile_url }}');"></a>
+                    </div>
+                    <span>{{ post.author }}</span>
                 </div>
                 <div class="card-body">
                     <img src="{{ post.photo.url }}" alt="" class="card-img-top">
@@ -16,7 +21,12 @@
                 <ul class="list-group list-group-flush">
                     {% for comment in post.comment_set.all %}
                     <li class="list-group-item text-center">
-                        <span class="float-left">{{ comment.author }}</span>
+                        <span class="float-left">
+                            <div style="width: 30px; height: 30px; display: inline-block;">
+                                <a href="#" class="rounded-circle profile_img"  style="background-image: url('{{ post.author.img_profile_url }}');"></a>
+                            </div>
+                            <span>{{ post.author }}</span>
+                        </span>
                         <span class="text-center">{{ comment.html|safe }}</span>
                     </li>
                     {% endfor %}

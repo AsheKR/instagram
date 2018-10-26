@@ -95,12 +95,11 @@ def profile(request):
     context = {}
 
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user)
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             context['success'] = "성공적으로 수정되었습니다."
-    else:
-        form = UserProfileForm(instance=request.user)
+    form = UserProfileForm(instance=request.user)
     context['form'] = form
     return render(request, 'members/profile.html', context)
 

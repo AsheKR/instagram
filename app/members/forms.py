@@ -112,11 +112,6 @@ class UserProfileForm(forms.ModelForm):
                     'class': 'form-control',
                 },
             ),
-            'img_profile': forms.ClearableFileInput(
-                attrs={
-                    'class': 'custom-file-input'
-                }
-            ),
             'site': forms.TextInput(
                 attrs={
                     'class': 'form-control',
