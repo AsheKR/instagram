@@ -1,6 +1,10 @@
+import json
+
+import requests
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from .forms import LoginForm, SignupForm, DivErrorList, UserProfileForm
@@ -52,8 +56,8 @@ def logout_view(request):
     # 처리 완료 후 'posts:post_list'로 이동
 
     # base.html에 있는 'Logout' 버튼이 이 view로 POST 요청하도록 함
-        # -> form을 구현해야함
-            # 'action' 속성의 값을 이 view로
+    # -> form을 구현해야함
+    # 'action' 속성의 값을 이 view로
     if request.method == 'POST':
         logout(request)
         return redirect('posts:post_list')
@@ -107,3 +111,36 @@ def profile(request):
     context['form'] = form
     return render(request, 'members/profile.html', context)
 
+
+def facebook_login(request):
+    # URL: /members/facebook_login/
+    # URL nmae: 'members:facebook_login'
+    # request.GET에 전달된 'code'값을
+    # 그대로 HttpResponse로 출력
+
+    api_get_access_token = 'https://graph.facebook.com/v3.2/oauth/access_token'
+
+    # requestToken
+    code = request.GET.get('code')
+    client_id = '346981992539109'
+    redirect_uri = 'http://localhost:8000/members/facebook_login'
+    client_secret = '147299406e7de0101fd812189742fe67'
+
+    params = {
+        'client_id': client_id,
+        'redirect_uri': redirect_uri,
+        'client_secret': client_secret,
+        'code': code
+    }
+
+    # requestToken to AccessToken
+    response = requests.get(api_get_access_token, params)
+
+    # Json To Python Object
+    # response_object = json.loads(response.text)
+    data = response.json()
+    access_token = data.get('access_token')
+
+    # AccessToken을 사용하여 사용자정보 가져오기
+
+    return

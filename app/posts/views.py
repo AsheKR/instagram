@@ -63,7 +63,6 @@ def post_create(request):
                 )
             return redirect('posts:post_list')
 
-
         #           PostCreateForm
         # form = PostCreateForm(request.POST, request.FILES)
         # if form.is_valid():
