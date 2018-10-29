@@ -25,6 +25,7 @@ class User(AbstractUser):
         return self.username
 
     def like_post_toggle(self, post_pk):
+        # now_like = self.postlike_set.filter(post=post).exists()
         now_like = PostLike.objects.get_or_create(post=post_pk, user=self)
         if not now_like[1]:
             # 만약 created=True이면 해당 객체 삭제

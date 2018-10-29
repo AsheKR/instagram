@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container">
     {% for post in posts %}
-    <div class="row justify-content-center mb-4">
+    <div class="row justify-content-center mb-4" id="post-{{ post.pk }}">
         <div class="col col-lg-6">
             <div class="card">
                 <div class="card-header">
