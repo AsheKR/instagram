@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -98,7 +99,10 @@ def profile(request):
         form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            context['success'] = "성공적으로 수정되었습니다."
+            messages.success(
+                request,
+                '프로필 수정이 완료되었습니다.'
+            )
     form = UserProfileForm(instance=request.user)
     context['form'] = form
     return render(request, 'members/profile.html', context)

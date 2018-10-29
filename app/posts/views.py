@@ -153,6 +153,9 @@ def tag_search(request):
 
 @login_required
 def post_like_toggle(request, post_pk):
+    # message Framework를 사용하는 이유는 redirect시에 context로 원하는 데이터를 보낼 수 없기 때문에
+    # meesage Framework를 사용하여 redirect시에도 특정 데이터를 표시해줄 수 있다.
+
     # URL: /posts/<post_pk>/like-toggle/
     # URL Name: 'posts:post-like-toggle'
     # POST method에 대해서만 처리
