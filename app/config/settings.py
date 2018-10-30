@@ -35,6 +35,10 @@ STATIC_URL = '/static/'
 
 # LOGIN Redirect할 곳
 LOGIN_URL = 'members:login_view'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'members.backends.FacebookBackend',
+]
 
 STATICFILES_DIRS = [
     STATIC_DIR,
