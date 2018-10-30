@@ -1,13 +1,19 @@
+import imghdr
+import io
 import json
+from pprint import pprint
 
 import requests
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from .forms import LoginForm, SignupForm, DivErrorList, UserProfileForm
+
+User = get_user_model()
 
 
 # Create your views here.
@@ -118,7 +124,10 @@ def facebook_login(request):
     # request.GET에 전달된 'code'값을
     # 그대로 HttpResponse로 출력
 
-    api_get_access_token = 'https://graph.facebook.com/v3.2/oauth/access_token'
+    api_base = 'https://graph.facebook.com/v3.2'
+
+    api_get_access_token = f'{api_base}/oauth/access_token'
+    api_me_user = f'{api_base}/me'
 
     # requestToken
     code = request.GET.get('code')
@@ -142,5 +151,54 @@ def facebook_login(request):
     access_token = data.get('access_token')
 
     # AccessToken을 사용하여 사용자정보 가져오기
+    params = {
+        'access_token': access_token,
+        'fields': ','.join([
+            'id',
+            'first_name',
+            'last_name',
+            'picture.type(large)',
+        ]),
+    }
+    response = requests.get(api_me_user, params)
+    data = response.json()
 
-    return
+    #JSON 데이터를 보기좋게 콜솔에 출력해준다.
+    pprint(data)
+
+    facebook_id = data['id']
+    first_name = data['first_name']
+    last_name = data['last_name']
+    url_img_profile = data['picture']['data']['url']
+
+    # 응답의 bynary dat를 사용해서 In-memotry binary stream(file) 객체를 생성
+    # img_response = requests.get(url_img_profile)
+    # f = io.Bytes.IO(img_response.content)
+
+    img_response = requests.get(url_img_profile)
+    # imghdr을 이용해 Image binary data의 확장자를 알아냄
+    img_extensions = imghdr.what('', h=img_response.content)
+    # form에서 업로드한 것과 같은 형태의 file-like object를 생성
+    # 첫 인수로 파일명, <facebook_id>.<확장자>형태의 파일을 지정
+    # request.FILES 안쪽의 파일객체들이 InMemoryUploadedFile 형태를 가지고 있고, 객체 저장시 upload_to에 자동으로 저장한다.
+    # SimpleUploadedFile은 InMemotryUploadedFile을 상속받는다.
+    binary_img = SimpleUploadedFile(f'{facebook_id}.{img_extensions}', img_response.content)
+
+    # User객체가 다른것과는 달리 create_user가 있는경우 password를 암호화해주는 로직이 있기 때문이다.
+    try:
+        user = User.objects.get(username=facebook_id)
+        # update_or_create
+        user.last_name = last_name
+        user.first_name = first_name
+        # user.img_profile = binary_img
+        user.save()
+    except User.DoesNotExist:
+        user = User.objects.create_user(
+            username=facebook_id,
+            first_name=first_name,
+            last_name=last_name,
+            img_profile=binary_img,
+        )
+
+    login(request, user)
+    return redirect('posts:post_list')
