@@ -1,3 +1,6 @@
+# Secret
+/.secrets
+
 # Media (Store User-upload files)
 /.media
 

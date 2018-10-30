@@ -4,12 +4,14 @@ import json
 from pprint import pprint
 
 import requests
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+
 
 from .forms import LoginForm, SignupForm, DivErrorList, UserProfileForm
 
@@ -131,9 +133,11 @@ def facebook_login(request):
 
     # requestToken
     code = request.GET.get('code')
-    client_id = '346981992539109'
+    # settings를 가져올 때는 django.conf.settings
+    # django.conf.settings 는 lazy한 처리를 할기때문에 config.settings를 사용하는것은 좋지 않다.
+    client_id = settings.FACEBOOK_APP_ID
     redirect_uri = 'http://localhost:8000/members/facebook_login'
-    client_secret = '147299406e7de0101fd812189742fe67'
+    client_secret = settings.FACEBOOK_APP_SECRET
 
     params = {
         'client_id': client_id,
