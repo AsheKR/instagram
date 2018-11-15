@@ -25,8 +25,10 @@ from . import views
 urlpatterns = [
     path('', RedirectView.as_view(pattern_name='posts:post_list'), name='redirect-post_lists'),
     path('admin/', admin.site.urls),
-    path('posts/', include('posts.urls')),
-    path('members/', include('members.urls')),
+    path('posts/', include('posts.urls.posts')),
+    path('post_api/', include('posts.urls.apis')),
+    path('member_api/', include('members.urls.apis')),
+    path('members/', include('members.urls.members')),
     path('explore/tags/<str:tag_name>', posts_views.tag_post_list, name="tag_post_list"),
     # path 타입은 / 를 포함한 문자열을 찾는다.
     #path('media/<path:path>/', views.media_serve)

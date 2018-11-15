@@ -1,8 +1,8 @@
 from django.urls import path
 
-from . import views
-
 # reverse 또는 템플릿의 {% url %} 태그에서 사용
+from posts import views
+
 app_name = 'posts'
 
 urlpatterns = [

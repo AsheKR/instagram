@@ -50,6 +50,40 @@
             vertical-align:middle;
 		}
 
+		#search-form {
+		    position: relative;
+		    overflow: visible;
+		}
+
+		ul.search-list {
+      display: none;
+		    position: absolute;
+		    width: 100%;
+		    height: 300px;
+		    top: 100%;
+		    left: 0;
+		    background-color: white;
+		    border: 1px solid #999;
+		    border-radius: 5px;
+		    z-index: 999;
+		    font-size: 20px;
+
+		    list-style-type: none;
+		    padding: 0;
+		    margin: 0;
+		}
+
+        ul.search-list > li {
+            display: block;
+            border-bottom: 1px solid #999;
+            text-align: center;
+        }
+        ul.search-list > li > a {
+            color: #666;
+        }
+
+
+
     </style>
 </head>
 <body>
@@ -58,8 +92,12 @@
         <!--좌측 제목-->
         <a href="{% url 'posts:post_list' %}" class="navbar-brand">Instagram</a>
         <!--검색 form-->
-        <form action="{% url 'posts:tag_search' %}" class="form-inline">
-            <input type="text" class="form-control" name="search_keyword" placeholder="검색">
+        <form id="search-form" action="{% url 'posts:tag_search' %}" class="form-inline">
+            <input id="search-input" type="text" class="form-control" name="search_keyword" placeholder="검색" autocomplete="off">
+            <ul class="search-list">
+                <li><a href="">Tag</a></li>
+                <li><a href="">Tag</a></li>
+            </ul>
         </form>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo"
                 aria-controls="navbarTogglerDemo" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,4 +147,32 @@
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+<script>
+
+    $('#search-input').keyup(function(e) {
+        var content = $('#search-input').val();
+        if (content.length == 0){
+          $(this).next().hide()
+        } else {
+          $(this).next().show()
+        }
+
+        $.ajax({
+          method: 'GET',
+          url: '{% url 'api_posts:api_tag_search' %}',
+          data: {
+            keyword: content
+          }
+        }).done(function(response) {
+          var tags = response;
+          console.log(tags)
+          searchList = $('ul.search-list')
+          searchList.empty()
+          for (var i = 0; i < tags.length; i++) {
+            var curTag = tags[i];
+            searchList.append('<li><a href=#>'+curTag.name+'<a/></li>');
+          }
+        })
+    })
+</script>
 </html>
