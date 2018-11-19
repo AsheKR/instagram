@@ -1,7 +1,7 @@
 import json
 
 from django.http import HttpResponse, Http404
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -9,25 +9,15 @@ from posts.models import Post, HashTag
 from posts.serializers import PostSerializer
 
 
-class PostList(APIView):
-    # drf 설치, settings에 적절히 설정 후 작업
-    # Postman에서 테스트
-    # URL: api/posts/
+class PostList(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )
 
-    def get(self, request, format=None):
-        posts = Post.objects.all()
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class PostDetail(APIView):
