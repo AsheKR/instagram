@@ -25,6 +25,21 @@ class CommentSerializer(serializers.ModelSerializer):
         )
 
 
+class PostLikeSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault(),
+    )
+    class Meta:
+        model = PostLike
+        fields = (
+            'user',
+            'post',
+        )
+        read_only_fields = (
+            'user',
+        )
+
+
 class PostSerializer(serializers.ModelSerializer):
     comment_set = CommentSerializer(many=True, read_only=True)
     like_users = UserSerializer(many=True, read_only=True)
