@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from posts.models import Post, HashTag, PostLike
+from posts.permissions import IsUser
 from posts.serializers import PostSerializer, PostLikeSerializer
 
 
@@ -36,7 +37,7 @@ class PostDetail(APIView):
 
     def get(self, request, pk, format=None):
         post = self.get_objects(pk)
-        serializer = PostSerializer(post)
+        serializer = PostSerializer(post, context={'request': request})
         return Response(serializer.data)
 
     def put(self, request, pk, format=None, **kwargs):
@@ -56,7 +57,7 @@ class PostDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class PostLikeCreate(APIView):
+class PostLikeCreateDestroy(APIView):
     permission_classes = (
         permissions.IsAuthenticated,
     )
@@ -69,11 +70,28 @@ class PostLikeCreate(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, post_pk):
+        post = get_object_or_404(Post, pk=post_pk)
+        post_like = get_object_or_404(PostLike, post=post, user=request.user)
+        post_like.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class PostLikeDelete:
-    pass
+class PostLikeDestroyAPIGenericView(generics.DestroyAPIView):
+    queryset = PostLike.objects.all()
+    serializer_class = PostLikeSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+
+class PostLikeCreateAPIView(generics.CreateAPIView):
+    queryset = PostLike.objects.all()
+    serializer_class = PostLikeSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+        IsUser,
+    )
 
 
 # 페이지를 리턴하지 않고 데이터를 리턴하기 때문에 view가 아닌 apis에 사용
